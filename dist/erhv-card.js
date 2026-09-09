@@ -95,45 +95,63 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
                     <!-- end left column -->
 
                         <!-- start center column -->
-            <div id="center">
-                <div id="target_temperature">
+<!-- start center column -->
+<div id="center">
+    <div id="target_temperature">
+        ${(() => {
+            const supplyEntity = this._config.supply_temperature;
+            const returnEntity = this._config.return_temperature;
+
+            const supplyState = supplyEntity
+                ? this.hass.states[supplyEntity]
+                : null;
+
+            const returnState = returnEntity
+                ? this.hass.states[returnEntity]
+                : null;
+
+            const supply = Number(supplyState?.state);
+            const returnAir = Number(returnState?.state);
+
+            if (!Number.isFinite(supply) || !Number.isFinite(returnAir)) {
+                return D`
                     <svg viewBox="0 0 120 50" width="120" height="50">
-                        ${(() => {
-                            const supply = Number(
-                                this.hass.states[this._config.supply_temperature].state
-                            );
-                            const returnAir = Number(
-                                this.hass.states[this._config.return_temperature].state
-                            );
-            
-                            const difference = Math.abs(supply - returnAir);
-            
-                            let colour;
-            
-                            if (difference < 0.75) {
-                                colour = "#4caf50";
-                            } else if (difference <= 1.25) {
-                                colour = "#ff9800";
-                            } else {
-                                colour = "#f44336";
-                            }
-            
-                            return D`
-                                <text
-                                    x="60"
-                                    y="25"
-                                    text-anchor="middle"
-                                    dominant-baseline="middle"
-                                    style="font-size:18px; fill:${colour}; font-weight:bold;"
-                                >
-                                    ${difference.toFixed(2)}
-                                    <tspan dx="2" dy="-7" style="font-size:7px;">°C</tspan>
-                                </text>
-                            `;
-                        })()}
+                        <text
+                            x="60"
+                            y="25"
+                            text-anchor="middle"
+                            dominant-baseline="middle"
+                            style="font-size:16px; fill:var(--secondary-text-color);"
+                        >--.-°C</text>
                     </svg>
-                </div>
-            </div>
+                `;
+            }
+
+            const difference = Math.abs(supply - returnAir);
+
+            let colour;
+            if (difference < 0.75) {
+                colour = "#4caf50";
+            } else if (difference <= 1.25) {
+                colour = "#ff9800";
+            } else {
+                colour = "#f44336";
+            }
+
+            return D`
+                <svg viewBox="0 0 120 50" width="120" height="50">
+                    <text
+                        x="60"
+                        y="25"
+                        text-anchor="middle"
+                        dominant-baseline="middle"
+                        style="font-size:18px; fill:${colour}; font-weight:bold;"
+                    >${difference.toFixed(2)}<tspan dx="2" dy="-6" style="font-size:7px;">°C</tspan></text>
+                </svg>
+            `;
+        })()}
+    </div>
+</div>
 <!-- end center column -->
 
                     <!-- end center column -->
