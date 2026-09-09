@@ -103,6 +103,7 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
                                     const difference = supply - returnAir;
                         
                                     let colour;
+
                                     if (difference < 0.75) {
                                         colour = "#4caf50";       // green
                                     } else if (difference <= 1.25) {
@@ -110,7 +111,8 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
                                     } else {
                                         colour = "#f44336";       // red
                                     }
-                        
+                                    
+                                                           
                                     return D`
                                         <text x="50%" y="50%" text-anchor="middle"
                                               style="font-size:18px; fill:${colour}; font-weight:bold;">
