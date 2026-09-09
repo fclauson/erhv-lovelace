@@ -97,39 +97,25 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
                         <!-- start center column -->
 <!-- start center column -->
 <div id="center">
-    <div id="target_temperature">
+    <div id="center_value">
         ${(() => {
-            const supplyEntity = this._config.supply_temperature;
-            const returnEntity = this._config.return_temperature;
+            const supplyState =
+                this.hass.states[this._config.supply_temperature];
 
-            const supplyState = supplyEntity
-                ? this.hass.states[supplyEntity]
-                : null;
-
-            const returnState = returnEntity
-                ? this.hass.states[returnEntity]
-                : null;
+            const returnState =
+                this.hass.states[this._config.return_temperature];
 
             const supply = Number(supplyState?.state);
             const returnAir = Number(returnState?.state);
 
             if (!Number.isFinite(supply) || !Number.isFinite(returnAir)) {
-                return D`
-                    <svg viewBox="0 0 120 50" width="120" height="50">
-                        <text
-                            x="60"
-                            y="25"
-                            text-anchor="middle"
-                            dominant-baseline="middle"
-                            style="font-size:16px; fill:var(--secondary-text-color);"
-                        >--.-°C</text>
-                    </svg>
-                `;
+                return "--.--°C";
             }
 
             const difference = Math.abs(supply - returnAir);
 
             let colour;
+
             if (difference < 0.75) {
                 colour = "#4caf50";
             } else if (difference <= 1.25) {
@@ -139,19 +125,14 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
             }
 
             return D`
-                <svg viewBox="0 0 120 50" width="120" height="50">
-                    <text
-                        x="60"
-                        y="25"
-                        text-anchor="middle"
-                        dominant-baseline="middle"
-                        style="font-size:18px; fill:${colour}; font-weight:bold;"
-                    >${difference.toFixed(2)}<tspan dx="2" dy="-6" style="font-size:7px;">°C</tspan></text>
-                </svg>
+                <span style="color:${colour};">
+                    ${difference.toFixed(2)}°C
+                </span>
             `;
         })()}
     </div>
 </div>
+<!-- end center column -->
 <!-- end center column -->
 
                     <!-- end center column -->
@@ -308,15 +289,22 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
             margin-top: 35px;
           }
 
-            #target_temperature {
-              position: absolute;
-              left: 50%;
-              top: 50%;
-              transform: translate(-50%, -50%);
-              width: 120px;
-              height: 50px;
-              z-index: 10;
-            }
+            #center_value {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 100;
+  display: block;
+  width: max-content;
+  min-width: 120px;
+  text-align: center;
+  font-size: 18px;
+  font-weight: bold;
+  line-height: 1;
+  white-space: nowrap;
+  pointer-events: none;
+}
 
 
 
