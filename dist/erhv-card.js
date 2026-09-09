@@ -95,16 +95,32 @@ function t(t,e,s,i){var n,r=arguments.length,o=r<3?e:null===i?i=Object.getOwnPro
                     <!-- end left column -->
 
                     <!-- start center column -->
-                    <div id="center">
-                        <div id="target_temperature">
-                            <svg viewBox="0 0 80 40">
-                                <text x="50%" dx="1" y="25%" text-anchor="middle" style="font-size:13px" @click=${this._handleMoreInfo}>
-                                    ${this.hass.states[this._config.climate_entity].attributes.temperature}
-                                    <tspan dx="-3" dy="-6.5" style="font-size:4px">°C</tspan>
-                                </text>
+                    <div id="target_temperature">
+                            <svg viewBox="0 0 120 50">
+                                ${(() => {
+                                    const supply = Number(this.hass.states[this._config.supply_temperature].state);
+                                    const returnAir = Number(this.hass.states[this._config.return_temperature].state);
+                                    const difference = supply - returnAir;
+                        
+                                    let colour;
+                                    if (difference < 0.75) {
+                                        colour = "#4caf50";       // green
+                                    } else if (difference <= 1.25) {
+                                        colour = "#ff9800";       // orange
+                                    } else {
+                                        colour = "#f44336";       // red
+                                    }
+                        
+                                    return D`
+                                        <text x="50%" y="50%" text-anchor="middle"
+                                              style="font-size:18px; fill:${colour}; font-weight:bold;">
+                                            ${difference.toFixed(2)}
+                                            <tspan dx="2" dy="-7" style="font-size:7px;">°C</tspan>
+                                        </text>
+                                    `;
+                                })()}
                             </svg>
                         </div>
-                    </div>
                     <!-- end center column -->
 
                     <!-- start right column -->
